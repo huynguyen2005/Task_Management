@@ -6,16 +6,22 @@ const sendMailHelper = require("../../../helpers/sendMail");
 
 //[POST] /users/register
 module.exports.register = async (req, res) => {
+    let {fullName, email, password} = req.body;
     try {
-        const exitUser = await User.findOne({ email: req.body.email, deleted: false });
+        const exitUser = await User.findOne({ email: email, deleted: false });
         if (exitUser) {
             return res.json({
                 code: 400,
                 message: "Email đã tồn tại"
             });
         }
-        req.body.password = md5(req.body.password);
-        const user = new User(req.body);
+        password = md5(password);
+        const user = new User({
+            fullName: fullName,
+            email: email,
+            password: password,
+            tokenUser: generateHelper.generateRandomString(20)
+        });
         await user.save();
         res.cookie("token", user.tokenUser);
         res.json({
