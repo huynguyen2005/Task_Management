@@ -169,3 +169,20 @@ module.exports.resetPassword = async (req, res) => {
     }
 }
 
+// [GET] /users/detail
+module.exports.detailUser = async (req, res) => {
+    const token = req.cookies.token;
+    try {
+        const inforUser = await User.findOne({tokenUser: token}).select("email fullName status");
+        res.json({
+            code: 200,
+            message: "Lấy thông tin thành công",
+            inforUser: inforUser
+        });
+    } catch (error) {
+        res.json({
+            code: 400,
+            message: "Lấy thông tin thất bại"
+        });
+    }
+}
