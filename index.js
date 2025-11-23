@@ -7,9 +7,14 @@ databaseConfig.connectDatabase();
 
 const routesApiVer1 = require('./api/v1/routes/index.route');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 // parse application/json
 app.use(bodyParser.json());
+
+//dùng cors để chia sẻ tài nguyên chéo nhau giữa fe vs be khi code theo hướng api
+app.use(cors());
+
 
 routesApiVer1(app);
 
