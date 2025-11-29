@@ -15,7 +15,7 @@ module.exports.requireAuth = async (req, res, next) => {
                     message: "token không hợp lệ"
                 });
             }
-            req.userInfor = userInfor.toObject();
+            req.userInfor = userInfor;
             next();
         } catch (error) {
             res.json({
