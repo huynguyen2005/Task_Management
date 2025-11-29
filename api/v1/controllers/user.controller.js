@@ -184,3 +184,24 @@ module.exports.detailUser = async (req, res) => {
         userInfor: req.userInfor
     });
 }
+
+//[GET] /users/list
+module.exports.list = async (req, res) => {
+    const userId = req.userInfor.id;
+    try {
+        const users = await User.find({
+            _id: { $ne: userId },
+            deleted: false
+        }).select("fullName email");
+        res.json({
+            code: 200,
+            message: "Lấy danh sách người dùng thành công",
+            users: users
+        });
+    } catch (error) {
+        res.json({
+            code: 400,
+            message: "Lấy danh sách người dùng thất bại"
+        });
+    }
+}
