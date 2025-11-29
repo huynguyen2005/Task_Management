@@ -6,7 +6,7 @@ const sendMailHelper = require("../../../helpers/sendMail");
 
 //[POST] /users/register
 module.exports.register = async (req, res) => {
-    let {fullName, email, password} = req.body;
+    let { fullName, email, password } = req.body;
     try {
         const exitUser = await User.findOne({ email: email, deleted: false });
         if (exitUser) {
@@ -58,10 +58,11 @@ module.exports.login = async (req, res) => {
                 message: "Tài khoản đã bị khóa"
             });
         }
-        res.cookie("token", user.tokenUser);
+        // res.cookie("token", user.tokenUser);
         res.json({
             code: 200,
-            mesage: "Đăng nhập thành công"
+            mesage: "Đăng nhập thành công",
+            token: user.tokenUser
         });
     } catch (error) {
         res.json({
@@ -162,7 +163,7 @@ module.exports.resetPassword = async (req, res) => {
         }, {
             password: md5(password)
         });
-        await ForgotPassword.deleteOne({email: user.email});
+        await ForgotPassword.deleteOne({ email: user.email });
         res.json({
             code: 200,
             message: "Đổi mật khẩu thành công"
@@ -177,18 +178,9 @@ module.exports.resetPassword = async (req, res) => {
 
 // [GET] /users/detail
 module.exports.detailUser = async (req, res) => {
-    const token = req.cookies.token;
-    try {
-        const inforUser = await User.findOne({tokenUser: token}).select("email fullName status");
-        res.json({
-            code: 200,
-            message: "Lấy thông tin thành công",
-            inforUser: inforUser
-        });
-    } catch (error) {
-        res.json({
-            code: 400,
-            message: "Lấy thông tin thất bại"
-        });
-    }
+    res.json({
+        code: 200,
+        message: "Lấy thông tin thành công",
+        userInfor: req.userInfor
+    });
 }
